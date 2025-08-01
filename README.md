@@ -1,252 +1,126 @@
-# boutiquetestenumero7
-# boutique_onli_test
-teste numero 7
-# boutiquetestenumero5
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NG_chopi_DIAMS - Boutique de Luxe</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Boutique en Ligne</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        /* Styles personnalisés */
-        .gold-text {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        [x-cloak] { display: none !important; }
+
+        /* Styles spécifiques pour le toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
         }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.2);
+
+        .toast {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            min-width: 250px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .cart-badge {
-            animation: bounce 0.5s;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+
+        .toast.show {
+            opacity: 1;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100">
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-black via-gray-900 to-black border-b border-yellow-400 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <h1 class="text-3xl font-bold gold-text">NG_chopi</h1>
-                <span class="text-yellow-400 font-semibold">DIAMS</span>
+<body class="bg-gray-900 text-white font-sans">
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <header class="bg-gray-800 shadow-lg py-4 px-6 md:px-12 flex justify-between items-center fixed w-full z-50">
+        <h1 class="text-3xl font-bold text-yellow-400">LUXURY SHOP</h1>
+        <div class="flex items-center space-x-6">
+            <div class="relative hidden md:block">
+                <input type="text" id="searchInput" placeholder="Rechercher des produits..." class="bg-gray-700 text-white rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
-            
-            <div class="hidden md:flex space-x-6">
-                <a href="#" class="text-gray-300 hover:text-yellow-400">Nouveautés</a>
-                <a href="#" class="text-gray-300 hover:text-yellow-400">Femmes</a>
-                <a href="#" class="text-gray-300 hover:text-yellow-400">Hommes</a>
-                <a href="#" class="text-yellow-400 font-bold">COLLECTION</a>
+
+            <div class="relative cursor-pointer" id="cart-icon">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.182 1.767.707 1.767H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
             </div>
-            
-            <div class="flex items-center space-x-4">
-                <button id="adminBtn" class="text-yellow-400 hover:text-yellow-300">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </button>
-                <button id="cartBtn" class="relative text-yellow-400 hover:text-yellow-300">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span id="cartCount" class="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">0</span>
-                </button>
-            </div>
+
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition">
+                <svg id="moon-icon" class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <svg id="sun-icon" class="w-6 h-6 text-yellow-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M3 12H2m15.325 5.232l-.707.707M6.775 6.775l-.707-.707M18.949 6.051l-.707-.707M5.051 18.949l-.707-.707M8.686 12.686l-.707-.707m-2.828 2.828l-.707-.707m-2.828 2.828l-.707-.707m11.314-11.314l.707-.707m-2.828 2.828l.707-.707m-2.828 2.828l.707-.707M12 15a3 3 0 110-6 3 3 0 010 6z"></path></svg>
+            </button>
         </div>
     </header>
 
-    <!-- Bannière Hero -->
-    <section class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-16 text-center">
-        <div class="container mx-auto px-4">
-            <h2 class="text-4xl md:text-5xl font-bold mb-4">COLLECTION EXCLUSIVE</h2>
-            <p class="text-xl mb-8">Articles de luxe à prix exceptionnels</p>
-            <button class="bg-black text-yellow-400 px-8 py-3 rounded-full font-bold hover:bg-gray-900 transition">
-                Découvrir
-            </button>
-        </div>
-    </section>
-
-    <!-- Produits -->
-    <section class="container mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="productsContainer">
-            <!-- Les produits seront chargés ici par JavaScript -->
-        </div>
-    </section>
-
-    <!-- Panier -->
-    <div id="cartOverlay" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden">
-        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-gray-900 border-l border-yellow-400 overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-yellow-400">Votre Panier</h2>
-                    <button id="closeCart" class="text-yellow-400 hover:text-yellow-300">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-end hidden">
+        <div class="bg-gray-800 w-full md:w-1/3 h-full shadow-lg flex flex-col">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-white">Votre Panier</h2>
+                <button id="close-cart" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="cart-items" class="flex-grow p-6 overflow-y-auto">
                 </div>
-                
-                <div id="cartItems" class="space-y-4 mb-6">
-                    <!-- Les articles du panier seront chargés ici -->
-                    <p class="text-gray-400 text-center py-12">Votre panier est vide</p>
+            <div class="p-6 border-t border-gray-700">
+                <div class="flex justify-between items-center text-xl font-bold mb-4">
+                    <span>Total:</span>
+                    <span id="cart-total">0 FCFA</span>
                 </div>
-                
-                <div class="border-t border-yellow-400/30 pt-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-lg font-semibold">Total:</span>
-                        <span id="cartTotal" class="text-xl font-bold gold-text">0 FCFA</span>
-                    </div>
-                    <!-- Formulaire client -->
-                    <div id="clientForm" class="hidden">
-                        <div class="mb-4">
-                            <label class="block text-yellow-400 mb-2">Nom et Prénom</label>
-                            <input type="text" id="clientName" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-yellow-400 mb-2">Numéro de téléphone</label>
-                            <input type="tel" id="clientPhone" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-yellow-400 mb-2">Ville</label>
-                            <input type="text" id="clientCity" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-yellow-400 mb-2">Quartier</label>
-                            <input type="text" id="clientNeighborhood" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
-                        </div>
-                        <div class="mb-6">
-                            <label class="block text-yellow-400 mb-2">Rue et Numéro</label>
-                            <input type="text" id="clientStreet" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
-                        </div>
-                        <button id="confirmOrderBtn" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-bold hover:opacity-90 transition">
-                            Confirmer la commande
-                        </button>
-                    </div>
-                    <button id="validateOrderBtn" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-3 rounded-lg font-bold hover:opacity-90 transition">
-                        Valider votre commande
-                    </button>
-                </div>
+                <button class="w-full bg-yellow-500 text-gray-900 py-3 rounded-lg font-bold hover:bg-yellow-400 transition">Procéder au Paiement</button>
             </div>
         </div>
     </div>
 
-    <!-- Espace Administrateur -->
-    <div id="adminPanel" class="fixed inset-0 bg-gray-900 z-50 overflow-y-auto hidden">
-        <div class="container mx-auto px-4 py-12">
-            <div class="flex justify-between items-center mb-12">
-                <h1 class="text-3xl font-bold gold-text">Panel d'Administration</h1>
-                <button id="closeAdmin" class="text-yellow-400 hover:text-yellow-300 px-4 py-2 border border-yellow-400 rounded-lg">
-                    Fermer
-                </button>
+    <main class="container mx-auto px-4 py-8 pt-28">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
+            <div class="relative w-full md:w-auto">
+                <select id="categoryFilter" class="block appearance-none w-full bg-gray-700 border border-gray-600 text-white py-3 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-gray-600 focus:border-yellow-400">
+                    <option value="all">Toutes Catégories</option>
+                    <option value="Robes">Robes</option>
+                    <option value="Hauts">Hauts</option>
+                    <option value="Accessoires">Accessoires</option>
+                    </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
             </div>
-            <div class="bg-gray-800 rounded-lg p-6 mb-8">
-                <h2 class="text-xl font-bold text-yellow-400 mb-4">Gestion des Produits</h2>
-                
-                <!-- Formulaire d'ajout/modification -->
-                <form id="adminProductForm" class="mb-6">
-                    <input type="hidden" id="productId">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-yellow-400 mb-2">Nom du produit</label>
-                            <input type="text" id="productName" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2" required>
-                        </div>
-                        <div>
-                            <label class="block text-yellow-400 mb-2">Catégorie</label>
-                            <select id="productCategory" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2" required>
-                                <option value="Robes">Robes</option>
-                                <option value="Hauts">Hauts</option>
-                                <option value="Accessoires">Accessoires</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-yellow-400 mb-2">Prix (FCFA)</label>
-                            <input type="number" id="productPrice" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2" required>
-                        </div>
-                        <div>
-                            <label class="block text-yellow-400 mb-2">Prix original</label>
-                            <input type="number" id="productOriginalPrice" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2" required>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-yellow-400 mb-2">URL de l'image</label>
-                        <input type="text" id="productImage" class="w-full bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2 mb-2" required>
-                    </div>
-                    <div class="flex space-x-3">
-                        <button type="submit" class="bg-yellow-400 text-black px-6 py-2 rounded-lg font-bold">
-                            Enregistrer
-                        </button>
-                        <button type="button" id="cancelEdit" class="bg-gray-700 text-white px-6 py-2 rounded-lg font-bold">
-                            Annuler
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Liste des produits -->
-                <div class="bg-gray-900 rounded-lg p-4 mb-4">
-                    <h3 class="text-lg font-semibold text-yellow-400 mb-3">Liste des produits</h3>
-                    <div id="adminProductsList" class="space-y-3">
-                        <!-- Produits chargés dynamiquement -->
-                    </div>
-                </div>
-
-                <!-- Timer vente flash -->
-                <div class="bg-gray-900 rounded-lg p-4 mb-4">
-                    <h3 class="text-lg font-semibold text-yellow-400 mb-3">Vente Flash</h3>
-                    <div class="flex items-center space-x-3 mb-3">
-                        <input type="datetime-local" id="saleEndTime" class="bg-gray-800 border border-yellow-400/30 rounded-lg px-4 py-2">
-                        <button id="startSaleTimer" class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-lg">
-                            Démarrer
-                        </button>
-                    </div>
-                    <div id="countdownDisplay" class="text-2xl font-bold text-center gold-text hidden">
-                        <span id="countdownDays">00</span>j 
-                        <span id="countdownHours">00</span>h 
-                        <span id="countdownMinutes">00</span>m 
-                        <span id="countdownSeconds">00</span>s
-                    </div>
-                </div>
-
-                <!-- Statistiques -->
-                <div class="bg-gray-900 rounded-lg p-4 mb-4">
-                    <h3 class="text-lg font-semibold text-yellow-400 mb-3">Statistiques</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-gray-800 p-3 rounded-lg">
-                            <p class="text-sm text-gray-300">Produits</p>
-                            <p class="text-xl font-bold gold-text" id="productsCount">0</p>
-                        </div>
-                        <div class="bg-gray-800 p-3 rounded-lg">
-                            <p class="text-sm text-gray-300">Ventes ce mois</p>
-                            <p class="text-xl font-bold gold-text">0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bouton d'ajout -->
-                <button id="addProductBtn" class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg font-bold w-full mb-4">
-                    Ajouter un nouveau produit
-                </button>
-
-                <!-- Sauvegarde -->
-                <button id="saveProductsBtn" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg font-bold w-full">
-                    Sauvegarder les modifications
-                </button>
+            <div class="relative w-full md:hidden">
+                <input type="text" id="searchInputMobile" placeholder="Rechercher des produits..." class="bg-gray-700 text-white rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full">
+                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
         </div>
-    </div>
+
+        <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            </div>
+    </main>
 
     <script>
-        // Données des produits
-        const products = [
+        // --- Éléments du DOM ---
+        const productsContainer = document.getElementById('products-container');
+        const cartIcon = document.getElementById('cart-icon');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const closeCartButton = document.getElementById('close-cart');
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        const cartCount = document.getElementById('cart-count');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const searchInput = document.getElementById('searchInput');
+        const searchInputMobile = document.getElementById('searchInputMobile'); // Pour mobile
+        const themeToggle = document.getElementById('theme-toggle');
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const toastContainer = document.getElementById('toast-container');
+
+        // --- Données des produits et panier ---
+        // Charger les produits depuis localStorage ou utiliser les produits par défaut si localStorage est vide
+        let products = JSON.parse(localStorage.getItem('shopProducts')) || [
             {
                 id: 1,
                 name: "Robe de Soirée Élégante",
@@ -254,7 +128,8 @@ teste numero 7
                 originalPrice: 95000,
                 image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/4f6e42aa-1393-409a-8d75-35dc173309c3.png",
                 category: "Robes",
-                rating: 4.8
+                rating: 4.8,
+                stock: 10
             },
             {
                 id: 2,
@@ -263,7 +138,8 @@ teste numero 7
                 originalPrice: 65000,
                 image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a1a416cf-2ed9-4826-b0fe-b0bf9ac24fba.png",
                 category: "Hauts",
-                rating: 4.6
+                rating: 4.6,
+                stock: 15
             },
             {
                 id: 3,
@@ -272,7 +148,8 @@ teste numero 7
                 originalPrice: 120000,
                 image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/dc732eb3-2b4e-46f9-bca1-86c42649759c.png",
                 category: "Robes",
-                rating: 4.9
+                rating: 4.9,
+                stock: 5
             },
             {
                 id: 4,
@@ -281,398 +158,278 @@ teste numero 7
                 originalPrice: 180000,
                 image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/58eefe4f-a865-4b1a-b96a-89a1659638b2.png",
                 category: "Accessoires",
-                rating: 5.0
+                rating: 5.0,
+                stock: 3
             }
         ];
 
-        // Panier
-        let cart = [];
+        // Charger le panier depuis localStorage
+        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
 
-        // Éléments du DOM
-        const productsContainer = document.getElementById('productsContainer');
-        const cartBtn = document.getElementById('cartBtn');
-        const closeCart = document.getElementById('closeCart');
-        const cartOverlay = document.getElementById('cartOverlay');
-        const cartItems = document.getElementById('cartItems');
-        const cartCount = document.getElementById('cartCount');
-        const cartTotal = document.getElementById('cartTotal');
-        const validateOrderBtn = document.getElementById('validateOrderBtn');
-        const adminBtn = document.getElementById('adminBtn');
-        const adminPanel = document.getElementById('adminPanel');
-        const closeAdmin = document.getElementById('closeAdmin');
+        // --- Fonctions de sauvegarde ---
+        function saveProducts() {
+            localStorage.setItem('shopProducts', JSON.stringify(products));
+        }
 
-        // Afficher les produits
-         function displayProducts() {
-    productsContainer.innerHTML = '';
-    const currentCategory = categoryFilter.value;
-    const searchTerm = searchInput.value.toLowerCase();
+        function saveCart() {
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+        }
 
-    const filteredProducts = products.filter(product => {
-        const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
-        const matchesSearch = product.name.toLowerCase().includes(searchTerm) || product.category.toLowerCase().includes(searchTerm);
-        return matchesCategory && matchesSearch;
-    });
+        // --- Fonctions utilitaires ---
 
-    if (filteredProducts.length === 0) {
-        productsContainer.innerHTML = '<p class="text-white text-center py-10">Aucun produit trouvé pour cette sélection.</p>';
-        return;
-    }
+        // Fonction pour afficher un toast (notification)
+        function showToast(message, duration = 3000) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+            toastContainer.appendChild(toast);
 
-    filteredProducts.forEach(product => {
-        // Déterminer si le produit est en rupture de stock
-        const isOutOfStock = product.stock <= 0;
-        // Récupérer la quantité de ce produit déjà dans le panier
-        const itemInCart = cart.find(item => item.id === product.id);
-        const quantityInCart = itemInCart ? itemInCart.quantity : 0;
+            // Force reflow for CSS transition
+            void toast.offsetWidth;
 
-        const productCard = document.createElement('div');
-        productCard.className = `bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col transform hover:scale-105 transition-transform duration-300 relative ${isOutOfStock ? 'opacity-70 grayscale' : ''}`; // Ajout de styles pour rupture
+            toast.classList.add('show');
 
-        productCard.innerHTML = `
-            ${isOutOfStock ? '<div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-10"><span class="text-white text-xl font-bold">Rupture de Stock</span></div>' : ''}
-            <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
-            <div class="p-4 flex-grow">
-                <h3 class="text-lg font-semibold text-white mb-1">${product.name}</h3>
-                <p class="text-sm text-gray-400 mb-2">${product.category}</p>
-                <div class="flex items-center mb-2">
-                    ${Array(Math.floor(product.rating)).fill().map(() => `<svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`).join('')}
-                    ${Array(5 - Math.floor(product.rating)).fill().map(() => `<svg class="w-4 h-4 text-gray-600 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`).join('')}
-                    <span class="text-gray-400 text-sm ml-1">(${product.rating.toFixed(1)})</span>
-                </div>
-                <div class="flex items-baseline space-x-2 mb-3">
-                    <span class="text-yellow-400 font-bold text-xl">${product.price.toLocaleString()} FCFA</span>
-                    ${product.originalPrice ? `<span class="text-gray-500 line-through text-sm">${product.originalPrice.toLocaleString()} FCFA</span>` : ''}
-                </div>
-                ${product.stock > 0 ? `<p class="text-sm text-green-400">Stock: ${product.stock} disponibles</p>` : `<p class="text-sm text-red-400">Stock: 0 (Rupture)</p>`}
-            </div>
-            <div class="p-4 border-t border-gray-700">
-                <button class="add-to-cart w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''}" data-id="${product.id}" ${isOutOfStock ? 'disabled' : ''}>
-                    ${isOutOfStock ? 'Rupture de Stock' : 'Ajouter au Panier'}
-                </button>
-            </div>
-        `;
-        productsContainer.appendChild(productCard);
-    });
-}
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => {
+                    toast.remove();
+                }, { once: true });
+            }, duration);
+        }
 
-        // Mettre à jour le panier
+        // --- Logique du Panier ---
         function updateCart() {
             cartItems.innerHTML = '';
             let total = 0;
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                const cartItem = document.createElement('div');
-                cartItem.className = 'flex justify-between items-center';
-                cartItem.innerHTML = `
-                    <span>${item.name} (x${item.quantity})</span>
-                    <span>${itemTotal.toLocaleString()} FCFA</span>
-                `;
-                cartItems.appendChild(cartItem);
-            });
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="text-gray-400 text-center py-12">Votre panier est vide</p>';
+            } else {
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-2';
+                    cartItem.innerHTML = `
+                        <div class="flex items-center space-x-3 w-3/5">
+                            <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded">
+                            <div>
+                                <span class="font-medium">${item.name}</span>
+                                <p class="text-sm text-yellow-400">${item.price.toLocaleString()} FCFA</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="quantity-btn bg-gray-700 text-white px-2 py-1 rounded hover:bg-gray-600 transition" data-id="${item.id}" data-action="decrease">-</button>
+                            <span class="font-bold">${item.quantity}</span>
+                            <button class="quantity-btn bg-gray-700 text-white px-2 py-1 rounded hover:bg-gray-600 transition" data-id="${item.id}" data-action="increase">+</button>
+                            <button class="remove-from-cart text-red-400 hover:text-red-300 ml-2" data-id="${item.id}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+            }
+
             cartTotal.innerText = total.toLocaleString() + ' FCFA';
-            cartCount.innerText = cart.length;
-            cartCount.classList.toggle('hidden', cart.length === 0);
+            cartCount.innerText = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.classList.toggle('hidden', cart.reduce((sum, item) => sum + item.quantity, 0) === 0);
+
+            saveCart();
         }
 
-        // Ajouter au panier
+        // --- Logique d'affichage des produits ---
+        function displayProducts() {
+            productsContainer.innerHTML = '';
+            const currentCategory = categoryFilter.value;
+            const searchTerm = (searchInput.value || searchInputMobile.value).toLowerCase();
+
+            const filteredProducts = products.filter(product => {
+                const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm) || product.category.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filteredProducts.length === 0) {
+                productsContainer.innerHTML = '<p class="text-white text-center py-10 col-span-full">Aucun produit trouvé pour cette sélection.</p>';
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const isOutOfStock = product.stock <= 0;
+                const productCard = document.createElement('div');
+                productCard.className = `bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col transform hover:scale-105 transition-transform duration-300 relative ${isOutOfStock ? 'opacity-70 grayscale' : ''}`;
+
+                productCard.innerHTML = `
+                    ${isOutOfStock ? '<div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-10"><span class="text-white text-xl font-bold">Rupture de Stock</span></div>' : ''}
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+                    <div class="p-4 flex-grow">
+                        <h3 class="text-lg font-semibold text-white mb-1">${product.name}</h3>
+                        <p class="text-sm text-gray-400 mb-2">${product.category}</p>
+                        <div class="flex items-center mb-2">
+                            ${Array(Math.floor(product.rating)).fill().map(() => `<svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`).join('')}
+                            ${Array(5 - Math.floor(product.rating)).fill().map(() => `<svg class="w-4 h-4 text-gray-600 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`).join('')}
+                            <span class="text-gray-400 text-sm ml-1">(${product.rating.toFixed(1)})</span>
+                        </div>
+                        <div class="flex items-baseline space-x-2 mb-3">
+                            <span class="text-yellow-400 font-bold text-xl">${product.price.toLocaleString()} FCFA</span>
+                            ${product.originalPrice ? `<span class="text-gray-500 line-through text-sm">${product.originalPrice.toLocaleString()} FCFA</span>` : ''}
+                        </div>
+                        ${product.stock > 0 ? `<p class="text-sm text-green-400">Stock: ${product.stock} disponibles</p>` : `<p class="text-sm text-red-400">Stock: 0 (Rupture)</p>`}
+                    </div>
+                    <div class="p-4 border-t border-gray-700">
+                        <button class="add-to-cart w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''}" data-id="${product.id}" ${isOutOfStock ? 'disabled' : ''}>
+                            ${isOutOfStock ? 'Rupture de Stock' : 'Ajouter au Panier'}
+                        </button>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+        }
+
+        // --- Écouteurs d'événements ---
+
+        // Ouvrir le panier
+        cartIcon.addEventListener('click', () => {
+            cartOverlay.classList.remove('hidden');
+        });
+
+        // Fermer le panier
+        closeCartButton.addEventListener('click', () => {
+            cartOverlay.classList.add('hidden');
+        });
+
+        // Fermer le panier en cliquant en dehors
+        cartOverlay.addEventListener('click', (e) => {
+            if (e.target === cartOverlay) {
+                cartOverlay.classList.add('hidden');
+            }
+        });
+
+        // Ajouter au panier depuis la grille des produits
         productsContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('add-to-cart')) {
                 const productId = e.target.getAttribute('data-id');
                 const product = products.find(p => p.id == productId);
-                const existingItem = cart.find(item => item.id === product.id);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ ...product, quantity: 1 });
-                }
-                updateCart();
-            }
-        });
 
-        // Ouvrir le panier
-        cartBtn.addEventListener('click', () => {
-            cartOverlay.classList.remove('hidden');
-            updateCart();
-        });
-
-        // Fermer le panier
-        closeCart.addEventListener('click', () => {
-            cartOverlay.classList.add('hidden');
-        });
-
-        // Valider la commande (afficher le formulaire)
-        validateOrderBtn.addEventListener('click', () => {
-            document.getElementById('validateOrderBtn').classList.add('hidden');
-            document.getElementById('clientForm').classList.remove('hidden');
-        });
-
-        // Confirmer la commande (envoyer sur WhatsApp)
-        document.getElementById('confirmOrderBtn').addEventListener('click', () => {
-            const clientName = document.getElementById('clientName').value;
-            const clientPhone = document.getElementById('clientPhone').value;
-            const clientCity = document.getElementById('clientCity').value;
-            const clientNeighborhood = document.getElementById('clientNeighborhood').value;
-            const clientStreet = document.getElementById('clientStreet').value;
-
-            if (!clientName || !clientPhone || !clientCity || !clientNeighborhood || !clientStreet) {
-                alert("Veuillez remplir tous les champs du formulaire");
-                return;
-            }
-
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const orderDetails = cart.map(item => 
-                • ${item.name} (x${item.quantity}) - ${(item.price * item.quantity).toLocaleString()} FCFA
-            ).join('\n');
-            
-            const message = 🌟 **Nouvelle commande NG_chopi_DIAMS** 🌟\n\n💎 **COMMANDE PREMIUM:**\n${orderDetails}\n\n💰 **TOTAL:** ${total.toLocaleString()} FCFA\n\n👤 **INFORMATIONS CLIENT:**\n📝 Nom: ${clientName}\n📞 Téléphone: ${clientPhone}\n📍 Adresse: ${clientCity}, ${clientNeighborhood}, ${clientStreet}\n\n✨ Merci pour votre commande de luxe chez NG_chopi_DIAMS !;
-
-            const whatsappUrl = https://wa.me/242064230404?text=${encodeURIComponent(message)};
-            window.open(whatsappUrl, '_blank');
-            
-            // Réinitialiser
-            cart = [];
-            document.getElementById('clientForm').classList.add('hidden');
-            document.getElementById('validateOrderBtn').classList.remove('hidden');
-            updateCart();
-            cartOverlay.classList.add('hidden');
-        });
-
-        // Fonctions admin
-        function loadAdminProducts() {
-            const container = document.getElementById('adminProductsList');
-            container.innerHTML = '';
-            products.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.className = 'flex justify-between items-center bg-gray-800 p-3 rounded-lg';
-                productElement.innerHTML = `
-                    <div>
-                        <h4 class="font-medium">${product.name}</h4>
-                        <p class="text-sm text-yellow-400">${product.price.toLocaleString()} FCFA</p>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="admin-edit-btn text-yellow-400 hover:text-yellow-300" data-id="${product.id}">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                            </svg>
-                        </button>
-                        <button class="admin-delete-btn text-red-400 hover:text-red-300" data-id="${product.id}">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(productElement);
-            });
-        }
-
-        function resetAdminForm() {
-            document.getElementById('productId').value = '';
-            document.getElementById('productName').value = '';
-            document.getElementById('productPrice').value = '';
-            document.getElementById('productOriginalPrice').value = '';
-            document.getElementById('productImage').value = '';
-            document.getElementById('productCategory').value = 'Robes';
-        }
-
-        // Sécurité admin
-        let failedAttempts = 0;
-        let isBanned = false;
-
-        // Évènements admin
-        adminBtn.addEventListener('click', () => {
-            if (isBanned) {
-                alert("Accès bloqué - Vous avez été banni pour trop de tentatives échouées");
-                return;
-            }
-
-            if (failedAttempts < 5) {
-                const code = prompt(Entrez le code d'accès à l'espace administrateur (Tentatives restantes: ${5 - failedAttempts}));
-                
-                if (code === "@inganibirds2007") {
-                    adminPanel.classList.remove('hidden');
-                    loadAdminProducts();
-                    failedAttempts = 0;
-                } else {
-                    failedAttempts++;
-                    
-                    if (failedAttempts >= 5) {
-                        const choice = confirm("Accès bloqué après 5 échecs\nVoulez-vous demander à réinitialiser le code?\n(Cela nécessitera une confirmation par email)");
-                        if (choice) {
-                            // Demander l'email et envoyer une demande de réinitialisation
-                            const email = prompt("Entrez votre email pour demander une réinitialisation:");
-                            if (email) {
-                                alert(Une demande de réinitialisation a été envoyée à ${email});
-                                // Envoyer une requête de réinitialisation
-                                setTimeout(() => alert("Email envoyé! Le code a été réinitialisé à '@inganibirds2007'"), 2000);
-                                failedAttempts = 0;
-                            } else {
-                                isBanned = true;
-                            }
+                if (product && product.stock > 0) {
+                    const existingItem = cart.find(item => item.id === product.id);
+                    if (existingItem) {
+                        if (existingItem.quantity < product.stock) {
+                            existingItem.quantity++;
+                            showToast(`"${product.name}" (x${existingItem.quantity}) ajouté au panier !`);
                         } else {
-                            const retry = confirm("Vous pouvez encore essayer 3 fois avant un bannissement");
-                            if (retry) {
-                                failedAttempts = 5; // Reset pour avoir 3 nouvelles tentatives
-                            }
+                            showToast(`Désolé, il ne reste plus que ${product.stock} exemplaire(s) de "${product.name}" en stock.`, 5000);
                         }
                     } else {
-                        alert("Code incorrect!");
+                        cart.push({ ...product, quantity: 1 });
+                        showToast(`"${product.name}" ajouté au panier !`);
                     }
+                    updateCart();
+                    displayProducts(); // Rafraîchit l'affichage des produits
+                } else if (product && product.stock === 0) {
+                    showToast(`Désolé, "${product.name}" est en rupture de stock.`, 5000);
                 }
-            } else if (failedAttempts < 8) {
-                const code = prompt(Attention, dernière tentative! (Restantes: ${8 - failedAttempts}));
-                if (code === "@inganibirds2007") {
-                    adminPanel.classList.remove('hidden');
-                    loadAdminProducts();
-                    failedAttempts = 0;
-                } else {
-                    failedAttempts++;
-                    if (failedAttempts >= 8) {
-                        alert("Accès bloqué - Trop de tentatives. Contactez l'administrateur.");
-                        isBanned = true;
+            }
+        });
+
+        // Gérer les quantités et la suppression dans le panier
+        cartItems.addEventListener('click', (e) => {
+            // Boutons d'augmentation/diminution de quantité
+            if (e.target.classList.contains('quantity-btn')) {
+                const productId = e.target.getAttribute('data-id');
+                const action = e.target.getAttribute('data-action');
+                const itemIndex = cart.findIndex(item => item.id == productId);
+
+                if (itemIndex !== -1) {
+                    const productInStock = products.find(p => p.id == productId); // Trouver le produit dans la liste originale
+
+                    if (action === 'increase') {
+                        if (productInStock && cart[itemIndex].quantity < productInStock.stock) {
+                            cart[itemIndex].quantity++;
+                            showToast(`Quantité de "${cart[itemIndex].name}" augmentée à ${cart[itemIndex].quantity}.`);
+                        } else if (productInStock) {
+                            showToast(`Désolé, il ne reste plus que ${productInStock.stock} exemplaire(s) de ${productInStock.name} en stock.`, 5000);
+                        }
+                    } else if (action === 'decrease') {
+                        cart[itemIndex].quantity--;
+                        if (cart[itemIndex].quantity <= 0) {
+                            const removedItemName = cart[itemIndex].name; // Sauvegarder le nom avant de supprimer
+                            cart.splice(itemIndex, 1);
+                            showToast(`"${removedItemName}" retiré du panier.`);
+                        } else {
+                            showToast(`Quantité de "${cart[itemIndex].name}" diminuée à ${cart[itemIndex].quantity}.`);
+                        }
                     }
+                    updateCart();
+                    displayProducts(); // Rafraîchit l'affichage des produits au cas où un stock change de 0
                 }
+            }
+
+            // Bouton de suppression d'article (l'icône poubelle)
+            if (e.target.closest('.remove-from-cart')) {
+                const productId = e.target.closest('.remove-from-cart').getAttribute('data-id');
+                const itemToRemove = cart.find(item => item.id == productId);
+                if (confirm(`Voulez-vous vraiment retirer "${itemToRemove ? itemToRemove.name : 'cet article'}" du panier ?`)) {
+                    cart = cart.filter(item => item.id != productId);
+                    showToast(`"${itemToRemove ? itemToRemove.name : 'Cet article'}" a été retiré du panier.`);
+                    updateCart();
+                    displayProducts(); // Rafraîchit l'affichage des produits au cas où un stock change de 0
+                }
+            }
+        });
+
+
+        // Filtrer par catégorie
+        categoryFilter.addEventListener('change', displayProducts);
+
+        // Rechercher sur le grand écran
+        searchInput.addEventListener('input', displayProducts);
+        // Rechercher sur le petit écran
+        searchInputMobile.addEventListener('input', displayProducts);
+
+        // --- Gestion du Thème (Dark/Light Mode) ---
+        function setDarkMode(isDark) {
+            if (isDark) {
+                document.body.classList.add('bg-gray-900', 'text-white');
+                document.body.classList.remove('bg-gray-100', 'text-gray-900');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+                localStorage.setItem('theme', 'dark');
             } else {
-                alert("Accès bloqué - Contactez l'administrateur pour récupérer l'accès");
+                document.body.classList.add('bg-gray-100', 'text-gray-900');
+                document.body.classList.remove('bg-gray-900', 'text-white');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+                localStorage.setItem('theme', 'light');
             }
-        });
-
-        // Ajouter un nouveau produit
-        document.getElementById('addProductBtn').addEventListener('click', () => {
-            resetAdminForm();
-        });
-
-        // Annuler l'édition
-        document.getElementById('cancelEdit').addEventListener('click', () => {
-            resetAdminForm();
-        });
-
-        // Écouter les clics sur les boutons d'édition/suppression
-        document.getElementById('adminProductsList').addEventListener('click', (e) => {
-            if (e.target.closest('.admin-edit-btn')) {
-                const productId = e.target.closest('.admin-edit-btn').getAttribute('data-id');
-                const product = products.find(p => p.id == productId);
-                if (product) {
-                    document.getElementById('productId').value = product.id;
-                    document.getElementById('productName').value = product.name;
-                    document.getElementById('productPrice').value = product.price;
-                    document.getElementById('productOriginalPrice').value = product.originalPrice;
-                    document.getElementById('productImage').value = product.image;
-                    document.getElementById('productCategory').value = product.category;
-                }
-            }
-            
-            if (e.target.closest('.admin-delete-btn')) {
-                const productId = e.target.closest('.admin-delete-btn').getAttribute('data-id');
-                if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
-                    const index = products.findIndex(p => p.id == productId);
-                    if (index !== -1) {
-                        products.splice(index, 1);
-                        loadAdminProducts();
-                        displayProducts();
-                    }
-                }
-            }
-        });
-
-        // Enregistrer les modifications
-        document.getElementById('adminProductForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const productData = {
-                id: document.getElementById('productId').value || Date.now(),
-                name: document.getElementById('productName').value,
-                price: parseInt(document.getElementById('productPrice').value),
-                originalPrice: parseInt(document.getElementById('productOriginalPrice').value),
-                image: document.getElementById('productImage').value,
-                category: document.getElementById('productCategory').value,
-                rating: 4.5 // Valeur par défaut
-            };
-
-            if (document.getElementById('productId').value) {
-                // Édition
-                const index = products.findIndex(p => p.id == document.getElementById('productId').value);
-                if (index !== -1) {
-                    products[index] = productData;
-                }
-            } else {
-                // Ajout
-                products.push(productData);
-            }
-
-            resetAdminForm();
-            loadAdminProducts();
-            displayProducts();
-        });
-
-        // Fermer l'espace administrateur
-        closeAdmin.addEventListener('click', () => {
-            adminPanel.classList.add('hidden');
-        });
-
-        // Timer vente flash
-        let saleTimerInterval;
-        function updateCountdown(endTime) {
-            const now = new Date();
-            const diff = endTime - now;
-            
-            if (diff <= 0) {
-                clearInterval(saleTimerInterval);
-                document.getElementById('countdownDisplay').classList.add('hidden');
-                alert("La vente flash est terminée!");
-                return;
-            }
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById('countdownDays').textContent = days.toString().padStart(2, '0');
-            document.getElementById('countdownHours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('countdownMinutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('countdownSeconds').textContent = seconds.toString().padStart(2, '0');
-            
-            document.getElementById('countdownDisplay').classList.remove('hidden');
         }
 
-        document.getElementById('startSaleTimer').addEventListener('click', () => {
-            const endTimeString = document.getElementById('saleEndTime').value;
-            if (!endTimeString) {
-                alert("Veuillez entrer une date/heure de fin");
-                return;
-            }
-            
-            const endTime = new Date(endTimeString);
-            if (endTime <= new Date()) {
-                alert("La date/heure doit être dans le futur");
-                return;
-            }
-            
-            clearInterval(saleTimerInterval);
-            updateCountdown(endTime);
-            saleTimerInterval = setInterval(() => updateCountdown(endTime), 1000);
+        themeToggle.addEventListener('click', () => {
+            const isDarkMode = document.body.classList.contains('bg-gray-900');
+            setDarkMode(!isDarkMode);
         });
 
-        // Charger depuis localStorage
-        function loadFromStorage() {
-            const savedProducts = localStorage.getItem('ng_chopi_products');
-            if (savedProducts) {
-                products = JSON.parse(savedProducts);
+        // --- Initialisation au chargement de la page ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Appliquer le thème sauvegardé
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                setDarkMode(false);
+            } else {
+                setDarkMode(true); // Par défaut ou si 'dark'
             }
-            displayProducts();
-            document.getElementById('productsCount').textContent = products.length;
-        }
 
-        // Sauvegarder dans localStorage
-        document.getElementById('saveProductsBtn').addEventListener('click', () => {
-            localStorage.setItem('ng_chopi_products', JSON.stringify(products));
-            alert('Modifications sauvegardées!');
+            // Sauvegarder les produits initiaux si c'est la première fois (pour avoir le stock)
+            if (!localStorage.getItem('shopProducts')) {
+                saveProducts();
+            }
+
+            displayProducts(); // Affiche les produits
+            updateCart();      // Met à jour le panier
         });
-
-        // Afficher les produits au chargement
-        loadFromStorage();
     </script>
 </body>
-</html>**
+</html>
